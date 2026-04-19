@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Isa's Reading Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400;1,600&family=Lora:ital,wght@0,400;1,400&family=DM+Sans:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --rose-pale: #fdf0f3;
+        --rose-light: #f5d6df;
+        --rose-mid: #e8a8bc;
+        --rose-deep: #b5476a;
+        --rose-dark: #7a2040;
+        --text-soft: #7d4e62;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background-color: var(--rose-pale);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: radial-gradient(
+          circle,
+          var(--rose-mid) 1px,
+          transparent 1px
+        );
+        background-size: 28px 28px;
+        opacity: 0.18;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .blob {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.22;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .blob-1 {
+        width: 420px;
+        height: 420px;
+        background: var(--rose-mid);
+        top: -120px;
+        left: -100px;
+      }
+      .blob-2 {
+        width: 320px;
+        height: 320px;
+        background: #f0b8cc;
+        bottom: -80px;
+        right: -80px;
+      }
+
+      .deco {
+        position: fixed;
+        font-size: 5rem;
+        color: var(--rose-mid);
+        opacity: 0.22;
+        pointer-events: none;
+        z-index: 0;
+        user-select: none;
+      }
+      .deco-book {
+        top: 38%;
+        left: 3%;
+        transform: rotate(-10deg);
+      }
+      .deco-pen {
+        bottom: 20%;
+        right: 4%;
+        transform: rotate(20deg);
+      }
+
+      .wrapper {
+        position: relative;
+        z-index: 1;
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+      }
+
+      /* ── Header ── */
+      header {
+        text-align: center;
+        padding: 52px 0 28px;
+        animation: fadeDown 0.7s ease both;
+      }
+      header h1 {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: clamp(2rem, 5vw, 3rem);
+        color: var(--rose-dark);
+        letter-spacing: -0.5px;
+        font-weight: 400;
+      }
+      .icon-strip {
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 14px;
+        font-size: 1.2rem;
+        color: var(--rose-deep);
+        opacity: 0.7;
+      }
+
+      /* ── Apresentação ── */
+      .about-card {
+        background: #fff;
+        border-radius: 22px;
+        border: 1px solid #f0ccd8;
+        box-shadow: 0 6px 32px rgba(140, 60, 90, 0.09);
+        padding: 44px 52px;
+        text-align: center;
+        margin-top: 28px;
+        animation: fadeUp 0.6s 0.1s ease both;
+      }
+      .avatar-wrapper {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        border: 3px solid var(--rose-mid);
+        overflow: hidden;
+        background: var(--rose-light);
+        margin: 0 auto 24px;
+      }
+      .avatar-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .bio-text {
+        font-family: "Lora", serif;
+        font-size: 1rem;
+        line-height: 1.85;
+        color: var(--text-soft);
+        max-width: 520px;
+        margin: 0 auto;
+      }
+      .star-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 24px;
+        font-size: 1.05rem;
+        color: var(--rose-deep);
+        opacity: 0.75;
+      }
+
+      /* ── Título de seção ── */
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 1.4rem;
+        color: var(--rose-dark);
+        font-weight: 400;
+        margin-bottom: 18px;
+      }
+      .section-title.center {
+        text-align: center;
+        margin-top: 48px;
+      }
+      .section-title.left {
+        text-align: left;
+        margin-top: 48px;
+      }
+
+      /* ── Card favorito ── */
+      .fav-card {
+        background: #ffffff;
+        border-radius: 22px;
+        border: 2px solid var(--rose-mid);
+        box-shadow: 0 10px 42px rgba(140, 60, 90, 0.15);
+        display: flex;
+        gap: 32px;
+        padding: 30px 36px;
+        align-items: flex-start;
+        animation: fadeUp 0.6s 0.2s ease both;
+      }
+      .fav-card .cover img {
+        width: 130px;
+        height: 195px;
+        object-fit: cover;
+        border-radius: 11px;
+        box-shadow: 5px 7px 24px rgba(140, 60, 90, 0.2);
+        display: block;
+      }
+      .fav-card .cover-ph {
+        width: 130px;
+        height: 195px;
+        border-radius: 11px;
+        background: linear-gradient(135deg, var(--rose-light), var(--rose-mid));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.6rem;
+        box-shadow: 5px 7px 24px rgba(140, 60, 90, 0.2);
+      }
+      .fav-card .info-title {
+        font-size: 1.25rem;
+      }
+      .fav-card .stars {
+        font-size: 1.15rem;
+        letter-spacing: 4px;
+      }
+
+      /* ── Leituras recentes ── */
+      .books-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        animation: fadeUp 0.6s 0.3s ease both;
+      }
+      .book-row {
+        background: #fff;
+        border-radius: 18px;
+        border: 1px solid #f0ccd8;
+        box-shadow: 0 4px 20px rgba(140, 60, 90, 0.07);
+        display: flex;
+        gap: 24px;
+        padding: 22px 26px;
+        align-items: flex-start;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .book-row:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(140, 60, 90, 0.13);
+      }
+      .book-row .cover img {
+        width: 100px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 9px;
+        box-shadow: 3px 5px 16px rgba(140, 60, 90, 0.17);
+        display: block;
+      }
+      .book-row .cover-ph {
+        width: 100px;
+        height: 150px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, var(--rose-light), var(--rose-mid));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        box-shadow: 3px 5px 16px rgba(140, 60, 90, 0.17);
+      }
+      .book-row .stars {
+        font-size: 1rem;
+        letter-spacing: 3px;
+      }
+
+      /* ── Info compartilhado ── */
+      .cover {
+        flex-shrink: 0;
+      }
+      .info {
+        flex: 1;
+        min-width: 0;
+      }
+      .info-title {
+        font-family: "Playfair Display", serif;
+        font-weight: 400;
+        color: var(--rose-dark);
+        margin-bottom: 2px;
+      }
+      .info-author {
+        font-size: 0.78rem;
+        color: var(--text-soft);
+        font-style: italic;
+        margin-bottom: 10px;
+      }
+      .stars {
+        color: var(--rose-deep);
+        display: block;
+        margin-bottom: 10px;
+      }
+      .desc {
+        font-family: "Lora", serif;
+        font-size: 0.9rem;
+        color: var(--text-soft);
+        line-height: 1.78;
+      }
+
+      /* ── Animações ── */
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .about-card {
+          padding: 32px 22px;
+        }
+        .fav-card,
+        .book-row {
+          flex-direction: column;
+          gap: 16px;
+          padding: 20px;
+        }
+        .fav-card .cover img,
+        .fav-card .cover-ph {
+          width: 100px;
+          height: 150px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="deco deco-book">📖</div>
+    <div class="deco deco-pen">✏️</div>
+
+    <div class="wrapper">
+      <header>
+        <h1>Isa's Reading Diary</h1>
+        <div class="icon-strip"><span>⊹₊˚‧︵‿₊୨ᰔ୧₊‿︵‧˚₊⊹</span></div>
+      </header>
+
+      <div class="about-card">
+        <div class="avatar-wrapper">
+          <img
+            src="assets/images/Drawing.jpeg"
+            alt="Isabela"
+            onerror="this.style.visibility = 'hidden'"
+          />
+        </div>
+        <p class="bio-text">
+          oie =D me chamo Isabela, tenho 22 anos e sou programadora. mas além de
+          gostar de programar, gosto também de ler livros, e fiz essa página no
+          intuito de falar de algumas das minhas leituras mais recentes.
+        </p>
+        <div class="star-row"><span>°❀⋆.ೃ࿔*:･°❀⋆.ೃ࿔*:･</span></div>
+      </div>
+
+      <h1 class="section-title center">Minha leitura favorita da vida</h1>
+
+      <div class="fav-card">
+        <div class="cover">
+          <img
+            src="assets/images/sally.jpg"
+            alt="Livro favorito"
+            onerror="
+              this.style.display = 'none';
+              this.nextElementSibling.style.display = 'flex';
+            "
+          />
+          <div class="cover-ph" style="display: none">💖</div>
+        </div>
+        <div class="info">
+          <div class="info-title">A Estranha Sally Diamond</div>
+          <div class="info-author">Liz Nugent</div>
+          <span class="stars">★★★★★</span>
+          <p class="desc">
+            Sally é uma mulher socialmente isolada que leva tudo ao pé da letra,
+            até mesmo um comentário do pai, o que desencadeia uma situação
+            chocante e muda completamente sua vida. A partir disso, segredos do
+            passado começam a surgir, revelando uma história muito mais sombria
+            do que parece. Esse foi, sem dúvida, meu livro favorito. Comecei sem
+            expectativa nenhuma e acabei completamente presa na história. É
+            diferente dos thrillers comuns, com uma protagonista única e um
+            desenvolvimento que surpreende o tempo todo. E o final… foi o que
+            mais me impactou, Fiquei literalmente =O
+          </p>
+        </div>
+      </div>
+
+      <p class="section-title left">Leituras mais recentes</p>
+
+      <!--
+    Estrelas: ★ preenchida, ☆ vazia.
+  -->
+      <div class="books-list">
+        <div class="book-row">
+          <div class="cover">
+            <img
+              src="assets/images/amorpara2.jpg"
+              alt="Livro 1"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="cover-ph" style="display: none">📖</div>
+          </div>
+          <div class="info">
+            <div class="info-title">Jogo de Amor Para Dois</div>
+            <div class="info-author">Ali Hazelwood</div>
+            <span class="stars">☆☆☆☆☆</span>
+            <p class="desc">
+              Ainda estou lendo! Mas até agora estou amando, me sentindo
+              representada com a protagonista que é da área de programação/jogos
+            </p>
+          </div>
+        </div>
+
+        <div class="book-row">
+          <div class="cover">
+            <img
+              src="assets/images/ate-fim-verao.jpg"
+              alt="Livro 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="cover-ph" style="display: none">📚</div>
+          </div>
+          <div class="info">
+            <div class="info-title">Até o Fim do Verão</div>
+            <div class="info-author">Abby Jimenez</div>
+            <span class="stars">★★★★★</span>
+            <p class="desc">
+              Justin acredita ter uma “maldição”: sempre que um relacionamento
+              dele termina, sua ex encontra o amor da vida logo depois. Quando
+              Emma, que passa pela mesma situação, entra em contato, os dois
+              decidem namorar com prazo para acabar, tudo para “quebrar” isso. O
+              que era pra ser algo leve e temporário acaba tomando um rumo bem
+              mais profundo. <br />
+              Eu gostei muito além do romance. A história da Emma com a mãe traz
+              questões bem pesadas, e acompanhar o momento em que ela começa a
+              se libertar disso foi muito marcante pra mim. Dá pra ver como isso
+              impacta diretamente na forma como ela vive e se permite ser feliz.
+              E uma das coisas que mais levei comigo foi: se puder escolher
+              entre a raiva e a empatia, escolha a empatia. É algo simples, mas
+              muda totalmente a forma de enxergar as pessoas e as situações.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-row">
+          <div class="cover">
+            <img
+              src="assets/images/inquilina.jpg"
+              alt="Livro 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="cover-ph" style="display: none">📚</div>
+          </div>
+          <div class="info">
+            <div class="info-title">A Inquilina</div>
+            <div class="info-author">Freida McFadden</div>
+            <span class="stars">★★★★☆</span>
+            <p class="desc">
+              Blake vê sua vida desmoronar depois de perder o emprego e decide
+              alugar um quarto da casa para conseguir se manter. Quando Whitney
+              aparece, parecendo a inquilina perfeita, tudo parece se encaixar…
+              até que coisas estranhas começam a acontecer, transformando o
+              ambiente em algo cada vez mais perturbador. <br />
+              Bom pra caramba! Eu amo a escrita da Freida, e esse livro me
+              prendeu do começo ao fim. Já desconfiava de algumas coisas e até
+              acertei partes do que ia acontecer, mas aquele plot específico do
+              final me pegou completamente desprevenida, fiquei em choque real.
+              É aquele tipo de história que vai te envolvendo aos poucos e,
+              quando você vê, já caiu direitinho na armadilha junto com o
+              personagem.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-row">
+          <div class="cover">
+            <img
+              src="assets/images/casa-escuridao.jpg"
+              alt="Livro 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="cover-ph" style="display: none">📚</div>
+          </div>
+          <div class="info">
+            <div class="info-title">A Casa da Escuridão Eterna</div>
+            <div class="info-author">Riley Sager</div>
+            <span class="stars">★★★★★</span>
+            <p class="desc">
+              Maggie retorna à casa onde viveu experiências traumáticas na
+              infância para reformá-la, mas acaba sendo puxada de volta para os
+              mistérios e eventos assustadores que marcaram seu passado. Entre
+              memórias, relatos e segredos escondidos, ela começa a questionar o
+              que é real, e o que aquela casa ainda esconde. <br />
+              QUE livro, sério. Foi uma experiência absurda de boa. Eu tava
+              completamente imersa na versão da Maggie, entendendo tudo… até que
+              as coisas começam a mudar e simplesmente explode na sua cara. O
+              plot me deixou sem palavras real. E assim, daria um FILME de
+              terror perfeito, sem esforço nenhum. Muito, muito bom.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-row">
+          <div class="cover">
+            <img
+              src="assets/images/as-irmas-blue.jpg"
+              alt="Livro 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="cover-ph" style="display: none">📚</div>
+          </div>
+          <div class="info">
+            <div class="info-title">As Irmãs Blue</div>
+            <div class="info-author">Coco Mellors</div>
+            <span class="stars">★★★★★</span>
+            <p class="desc">
+              Após a morte inesperada de Nicky, três irmãs retornam à casa da
+              família em Nova York e precisam lidar com o luto, os próprios
+              conflitos e as marcas do passado. Entre segredos, vícios e
+              relações complexas, elas tentam entender quem são sem a pessoa que
+              as mantinha unidas. <br />
+              Achei um livro um tanto melancólico, admito que tive raiva de
+              algumas personagens (menos Bonnie, minha protegida ❤︎). Totalmente
+              fora da minha zona de conforto, já que sou do time thriller, e no
+              começo foi mais difícil de engatar — quase abandonei. Mas ainda
+              bem que não fiz isso. O final vale muito a pena, e a história é
+              muito real, muito humana. Dá pra sentir que aquilo poderia
+              acontecer com qualquer pessoa, e acho que é isso que torna tudo
+              ainda mais forte.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-row">
+          <div class="cover">
+            <img
+              src="assets/images/massacre-hope.jpg"
+              alt="Livro 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="cover-ph" style="display: none">📚</div>
+          </div>
+          <div class="info">
+            <div class="info-title">O Massacre da Família Hope</div>
+            <div class="info-author">Riley Sager</div>
+            <span class="stars">★★★★☆</span>
+            <p class="desc">
+              O livro acompanha o massacre da família Hope, ocorrido em 1929,
+              onde três membros foram assassinados e apenas Lenora sobreviveu,
+              tornando-se a principal suspeita do crime. Anos depois, a história
+              ainda carrega mistérios e dúvidas sobre o que realmente aconteceu
+              naquela noite. <br />
+              Cara, esse livro tem MUITOS plots, mas todos jogados no final, e
+              isso me incomodou um pouco. Achei informação demais de uma vez só,
+              teria sido muito mais interessante se fosse desenvolvido ao longo
+              da história. Mas enfim, humilde opinião de leitora. Ainda assim, o
+              plot principal me pegou de verdade (Lenora não é nada do que a
+              gente imagina), e esse sim foi <i>O</i>
+              momento do livro pra mim.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-row">
+          <div class="cover">
+            <img
+              src="assets/images/ultimo-nos.jpg"
+              alt="Livro 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="cover-ph" style="display: none">📚</div>
+          </div>
+          <div class="info">
+            <div class="info-title">Até o Último de Nós</div>
+            <div class="info-author">Freida McFadden</div>
+            <span class="stars">★★★★☆</span>
+            <p class="desc">
+              Claire decide viajar com o marido e amigos para tentar aliviar a
+              crise no casamento, mas o que era pra ser um descanso vira um
+              pesadelo quando o grupo se perde na floresta e começa a ser
+              atacado misteriosamente, um por um. <br />
+              Cara… livro ok. Não foi aquele MEU DEUS QUE PLOT, mas também não é
+              ruim. O final foi o que mais gostei, principalmente pela forma
+              como trouxe reflexões sobre relacionamento. Meio que reforça
+              coisas que a gente já sabe, mas às vezes ignora. E assim… não
+              espere precisar quase morrer numa floresta pra resolver seu
+              casamento, né.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-row">
+          <div class="cover">
+            <img
+              src="assets/images/layla.jpg"
+              alt="Livro 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="cover-ph" style="display: none">📚</div>
+          </div>
+          <div class="info">
+            <div class="info-title">Layla</div>
+            <div class="info-author">Colleen Hoover</div>
+            <span class="stars">★★☆☆☆</span>
+            <p class="desc">
+              Leeds e Layla vivem um relacionamento leve e intenso até que um
+              ataque muda completamente a vida dos dois. Tentando recuperar o
+              que tinham, ele a leva de volta ao lugar onde se conheceram, mas
+              acontecimentos estranhos começam a surgir, e tudo fica ainda mais
+              confuso quando uma nova conexão entra em cena. <br />
+              Não foi minha melhor leitura… se desse pra recuperar os 14 reais,
+              eu recuperava. Mas, pra não dizer que foi de todo ruim, a conexão
+              entre Leeds e Layla é muito boa, bem intensa mesmo. Pena que o
+              desenvolvimento não me prendeu tanto quanto eu esperava.
+            </p>
+          </div>
+        </div>
+
+        <div class="book-row">
+          <div class="cover">
+            <img
+              src="assets/images/teia-mentiras.jpg"
+              alt="Livro 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="cover-ph" style="display: none">📚</div>
+          </div>
+          <div class="info">
+            <div class="info-title">Teia de Mentiras</div>
+            <div class="info-author">Sophie Stava</div>
+            <span class="stars">★★★★★★★★★★★★★★★★★</span>
+            <p class="desc">
+              Sloane é uma mentirosa compulsiva que acaba se envolvendo com uma
+              família aparentemente perfeita ao fingir ser enfermeira. Mas,
+              conforme se aproxima dos Lockhart, percebe que por trás da
+              perfeição existem segredos sombrios — e suas próprias mentiras
+              começam a sair do controle. <br />
+              QUE LIVROOOOO MEUS AMIGOS. QUE. LIVRO.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
